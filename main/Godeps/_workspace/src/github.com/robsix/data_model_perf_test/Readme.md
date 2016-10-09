@@ -26,3 +26,12 @@ All tests are run on perfect K-ary trees where each node/row has two integer pro
 are both initialised to be the same value, the nodes/rows are assigned incremental ids in breadth-first order starting
 from 0 at the root of the tree. This makes it easy to perform certain validation steps on the query results to ensure they
 are working as intended.
+
+##Run
+
+```
+go get github.com/robsix/data_model_perf_test
+cd $GOPATH/github.com/robsix/data_model_perf_test
+go build
+./main.exe
+```
