@@ -16,18 +16,18 @@ func createPerfectKaryTreeInNeo(k, h int, execNeo func(string) error) error {
 			return err
 		}
 	} else {
-		err := execNeo("CREATE (:NODE {id:0, value:0})")
-		err = execNeo(fmt.Sprintf("UNWIND RANGE(1, %d, 2) AS id CREATE (a:NODE {id:id, value: id})-[:NEXT_SIBLING]->(b:NODE {id: id+1, value: id+1}) WITH a, b	MATCH (c:NODE {id: b.id+1}) CREATE (b)-[:NEXT_SIBLING]->(c)", lastNode))
+		err := execNeo(fmt.Sprintf("UNWIND RANGE(1, %d, 2) AS id CREATE (a:NODE {id:id, value: id})-[:NEXT_SIBLING]->(b:NODE {id: id+1, value: id+1}) WITH a, b	MATCH (c:NODE {id: b.id+1}) CREATE (b)-[:NEXT_SIBLING]->(c)", lastNode))
 		if err != nil {
 			return err
 		}
+		err = execNeo("MATCH (a:NODE {id:1}) CREATE (:NODE {id:0, value:0})-[:NEXT_SIBLING]->(a)")
 	}
-	err := execNeo(fmt.Sprintf("MATCH (a:NODE)-[r:NEXT_SIBLING]->(b:NODE) WHERE a.id %% %d = 0 DELETE r", k))
+	lastParentNode := (lastNode - 1) / k
+	err := execNeo(fmt.Sprintf("UNWIND RANGE(0, %d, 1) AS id MATCH shortestPath((a:NODE {id:id})-[:NEXT_SIBLING *]->(b:NODE {id:id*%d+1})) CREATE (a)-[:FIRST_CHILD]->(b)", lastParentNode, k))
 	if err != nil {
 		return err
 	}
-	lastParentNode := (lastNode - 1) / k
-	err = execNeo(fmt.Sprintf("UNWIND RANGE(0, %d, 1) AS id MATCH (a:NODE {id:id}), (b:NODE {id:id*%d+1}) CREATE (a)-[:FIRST_CHILD]->(b)", lastParentNode, k))
+	err = execNeo(fmt.Sprintf("MATCH (a:NODE)-[r:NEXT_SIBLING]->(b:NODE) WHERE a.id %% %d = 0 DELETE r", k))
 	if err != nil {
 		return err
 	}
