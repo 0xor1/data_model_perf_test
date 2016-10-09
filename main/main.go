@@ -21,7 +21,7 @@ func main() {
 			dmpt.NewSqlDataModelPerfTest(db),
 		},
 		[]int{3/*, 4, 5, 6, 7, 8, 9, 10*/},
-		[]int{3, 4, 5, 6, 7/*, 8, 9, 10*/},
+		[]int{3, 4, 5, 6, 7, 8, 9, 10},
 		log,
 	)
 	log.Warning("TESTING COMPLETE: Press enter to exit")
