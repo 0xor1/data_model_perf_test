@@ -13,7 +13,7 @@ These are the latest versions known to work with the tests
 + MySql 5.7 (community edition)
 + Neo4j 3.0.4 (community edition)
 
-The configuration of the tests is all in the main function in main/main.go, the current configuration assumes you have:
+The configuration of the tests is in the main function in main/main.go, the current configuration assumes you have:
 
 + Neo4j database running and accessible at `"bolt://neo4j:root@localhost:7687"`
 + MySql server running with a blank database `dmpt` and accessible at `"root:root@tcp(localhost:3306)/dmpt?multiStatements=true"`
@@ -22,8 +22,8 @@ Update as necessary.
 
 ##Data
 
-All tests are run on perfect K-ary trees where each node/row has two integer properties/columns `id` and `value` which
-are both initialised to be the same value, the nodes/rows are assigned incremental ids in breadth-first order starting
+All tests are run on perfect K-ary trees where each node has two integer properties `id` and `value` which
+are both initialised to be the same value, the nodes are assigned incremental ids in breadth-first order starting
 from 0 at the root of the tree. This makes it easy to perform certain validation steps on the query results to ensure they
 are working as intended.
 
