@@ -17,16 +17,18 @@ func createPerfectKaryTreeInNeo(k, h int, execNeo func(string) error) error {
 	MERGE (parent:NODE {id:parent_id, value:parent_id})
 	MERGE (child:NODE {id: first_child_id, value:first_child_id})
 	MERGE (parent) - [:FIRST_CHILD] -> (child)
-	WITH k AS k, first_child_id
+	WITH k AS k, first_child_id, parent
 	UNWIND RANGE(first_child_id + 1, first_child_id + k - 1) AS next_child_id
 	MERGE (last_child:NODE {id:next_child_id -1, value:next_child_id -1})
 	MERGE (next_child:NODE {id:next_child_id, value:next_child_id})
 	MERGE (last_child) - [:NEXT_SIBLING] -> (next_child)
+	MERGE (last_child) - [:PARENT] -> (parent)
+	MERGE (next_child) - [:PARENT] -> (parent)
 	`, k, h))
 }
 
 func generateNodeAisADescendantOfNodeBNeoQuery(nodeA, nodeB int) string {
-	return fmt.Sprintf("MATCH (b:NODE {id:%d})-[:FIRST_CHILD]->(:NODE)-[:FIRST_CHILD|:NEXT_SIBLING *]->(a:NODE {id:%d}) RETURN b.id UNION MATCH (b:NODE {id:%d})-[:FIRST_CHILD]->(a:NODE {id:%d}) RETURN b.id", nodeB, nodeA, nodeB, nodeA)
+	return fmt.Sprintf("MATCH (b:NODE {id:%d})<-[:PARENT *]-(a:NODE {id:%d}) RETURN b.id", nodeB, nodeA)
 }
 
 func generateIncrementValueOfNodeNeoQuery(node int) string {
@@ -34,15 +36,15 @@ func generateIncrementValueOfNodeNeoQuery(node int) string {
 }
 
 func generateIncrementValueOfAllDescendantsOfNeoQuery(node int) string {
-	return fmt.Sprintf("MATCH (n:NODE {id:%d})-[:FIRST_CHILD|:NEXT_SIBLING *]->(a:NODE) SET a.value = a.value + 1", node)
+	return fmt.Sprintf("MATCH (n:NODE {id:%d})<-[:PARENT *]-(a:NODE) SET a.value = a.value + 1", node)
 }
 
 func generateSumValuesBeneathNeoQuery(node int) string {
-	return fmt.Sprintf("MATCH (NODE {id:%d})-[:FIRST_CHILD|:NEXT_SIBLING *]->(a:NODE) RETURN SUM(a.value) AS sum", node)
+	return fmt.Sprintf("MATCH (:NODE {id:%d})<-[:PARENT *]-(a:NODE) RETURN SUM(a.value) AS sum", node)
 }
 
 func generateGetAncestralChainOf(node int) string {
-	return fmt.Sprintf("MATCH (parent:NODE)-[:FIRST_CHILD]->(child:NODE {id:%d}) RETURN parent.id AS id UNION MATCH (parent:NODE)-[:FIRST_CHILD]->(:NODE)-[:FIRST_CHILD|:NEXT_SIBLING *]->(child:NODE {id:%d}) RETURN parent.id AS id", node, node)
+	return fmt.Sprintf("MATCH (parent:NODE)<-[:PARENT *1..]-(child:NODE {id:%d}) RETURN parent.id AS id", node)
 }
 
 func wipeNeoBoltDb(driverPool bolt.DriverPool) error {
