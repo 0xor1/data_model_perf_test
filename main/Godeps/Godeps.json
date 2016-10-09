@@ -1,0 +1,83 @@
+{
+	"ImportPath": "github.com/robsix/data_model_perf_test/main",
+	"GoVersion": "go1.7",
+	"GodepVersion": "v62",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/daviddengcn/go-colortext",
+			"Rev": "3b18c8575a432453d41fdafb340099fff5bba2f7"
+		},
+		{
+			"ImportPath": "github.com/go-sql-driver/mysql",
+			"Comment": "v1.2-194-g7ebe0a5",
+			"Rev": "7ebe0a500653eeb1859664bed5e48dec1e164e73"
+		},
+		{
+			"ImportPath": "github.com/jmcvetta/neoism",
+			"Comment": "v1.3.1-6-g9d29cb1",
+			"Rev": "9d29cb10be18b1256c9290b9fc9b64c34278b8b7"
+		},
+		{
+			"ImportPath": "github.com/jmcvetta/randutil",
+			"Rev": "2bb1b664bcff821e02b2a0644cd29c7e824d54f8"
+		},
+		{
+			"ImportPath": "github.com/johnnadratowski/golang-neo4j-bolt-driver",
+			"Rev": "cbce611fd243658cc56a502d6edc81af26400103"
+		},
+		{
+			"ImportPath": "github.com/johnnadratowski/golang-neo4j-bolt-driver/encoding",
+			"Rev": "cbce611fd243658cc56a502d6edc81af26400103"
+		},
+		{
+			"ImportPath": "github.com/johnnadratowski/golang-neo4j-bolt-driver/errors",
+			"Rev": "cbce611fd243658cc56a502d6edc81af26400103"
+		},
+		{
+			"ImportPath": "github.com/johnnadratowski/golang-neo4j-bolt-driver/log",
+			"Rev": "cbce611fd243658cc56a502d6edc81af26400103"
+		},
+		{
+			"ImportPath": "github.com/johnnadratowski/golang-neo4j-bolt-driver/structures",
+			"Rev": "cbce611fd243658cc56a502d6edc81af26400103"
+		},
+		{
+			"ImportPath": "github.com/johnnadratowski/golang-neo4j-bolt-driver/structures/graph",
+			"Rev": "cbce611fd243658cc56a502d6edc81af26400103"
+		},
+		{
+			"ImportPath": "github.com/johnnadratowski/golang-neo4j-bolt-driver/structures/messages",
+			"Rev": "cbce611fd243658cc56a502d6edc81af26400103"
+		},
+		{
+			"ImportPath": "github.com/kr/pretty",
+			"Comment": "go.weekly.2011-12-22-27-ge6ac2fc",
+			"Rev": "e6ac2fc51e89a3249e82157fa0bb7a18ef9dd5bb"
+		},
+		{
+			"ImportPath": "github.com/kr/text",
+			"Rev": "bb797dc4fb8320488f47bf11de07a733d7233e1f"
+		},
+		{
+			"ImportPath": "github.com/robsix/data_model_perf_test",
+			"Rev": "ab1d0ae2f40469b338f6734ab3a2375b7aa15b30"
+		},
+		{
+			"ImportPath": "github.com/robsix/golog",
+			"Rev": "e7b7a82f39e99b3b479225cc4937aa28d5e65b8f"
+		},
+		{
+			"ImportPath": "github.com/stretchr/testify/assert",
+			"Comment": "v1.0-51-gf3960ab",
+			"Rev": "f3960ab1f9664ecc4e27c78af27cc9063d745a43"
+		},
+		{
+			"ImportPath": "gopkg.in/jmcvetta/napping.v3",
+			"Comment": "v3.1.1",
+			"Rev": "d2748d8bdd2cffedec5c3024958de65bf7cb55aa"
+		}
+	]
+}
