@@ -63,7 +63,7 @@
 		},
 		{
 			"ImportPath": "github.com/robsix/data_model_perf_test",
-			"Rev": "8259349f09676b05362dd58c27a4527ebc63501c"
+			"Rev": "ff3d40edb575272785a3fb071e7d663db5b69767"
 		},
 		{
 			"ImportPath": "github.com/robsix/golog",
