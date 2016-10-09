@@ -21,6 +21,9 @@ func createPerfectKaryTreeInNeo(k, h int, execNeo func(string) error) error {
 			return err
 		}
 		err = execNeo("MATCH (a:NODE {id:1}) CREATE (:NODE {id:0, value:0})-[:NEXT_SIBLING]->(a)")
+		if err != nil {
+			return err
+		}
 	}
 	lastParentNode := (lastNode - 1) / k
 	err := execNeo(fmt.Sprintf("UNWIND RANGE(0, %d, 1) AS id MATCH shortestPath((a:NODE {id:id})-[:NEXT_SIBLING *]->(b:NODE {id:id*%d+1})) CREATE (a)-[:FIRST_CHILD]->(b)", lastParentNode, k))
