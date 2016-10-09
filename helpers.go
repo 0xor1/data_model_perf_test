@@ -9,32 +9,20 @@ import (
 )
 
 func createPerfectKaryTreeInNeo(k, h int, execNeo func(string) error) error {
-	lastNode := ((iPow(k, (h+1)) - 1) / (k - 1)) - 1
-	if lastNode % 2 != 0 {
-		err := execNeo(fmt.Sprintf("UNWIND RANGE(0, %d, 2) AS id CREATE (a:NODE {id:id, value: id})-[:NEXT_SIBLING]->(b:NODE {id: id+1, value: id+1}) WITH a, b	MATCH (c:NODE {id: b.id+1}) CREATE (b)-[:NEXT_SIBLING]->(c)", lastNode - 1))
-		if err != nil {
-			return err
-		}
-	} else {
-		err := execNeo(fmt.Sprintf("UNWIND RANGE(1, %d, 2) AS id CREATE (a:NODE {id:id, value: id})-[:NEXT_SIBLING]->(b:NODE {id: id+1, value: id+1}) WITH a, b	MATCH (c:NODE {id: b.id+1}) CREATE (b)-[:NEXT_SIBLING]->(c)", lastNode))
-		if err != nil {
-			return err
-		}
-		err = execNeo("MATCH (a:NODE {id:1}) CREATE (:NODE {id:0, value:0})-[:NEXT_SIBLING]->(a)")
-		if err != nil {
-			return err
-		}
-	}
-	lastParentNode := (lastNode - 1) / k
-	err := execNeo(fmt.Sprintf("UNWIND RANGE(0, %d, 1) AS id MATCH shortestPath((a:NODE {id:id})-[:NEXT_SIBLING *]->(b:NODE {id:id*%d+1})) CREATE (a)-[:FIRST_CHILD]->(b)", lastParentNode, k))
-	if err != nil {
-		return err
-	}
-	err = execNeo(fmt.Sprintf("MATCH (a:NODE)-[r:NEXT_SIBLING]->(b:NODE) WHERE a.id %% %d = 0 DELETE r", k))
-	if err != nil {
-		return err
-	}
-	return nil
+	return execNeo(fmt.Sprintf(`
+	WITH %d AS k, %d AS h
+	WITH k AS k, REDUCE(s = toFloat(0), x IN RANGE(1, h-1)|s + k^x) AS max_parent_id
+	UNWIND RANGE(0, toInt(max_parent_id)) AS parent_id
+	WITH k AS k, parent_id, k*parent_id+1 AS first_child_id
+	MERGE (parent:NODE {id:parent_id, value:parent_id})
+	MERGE (child:NODE {id: first_child_id, value:first_child_id})
+	MERGE (parent) - [:FIRST_CHILD] -> (child)
+	WITH k AS k, first_child_id
+	UNWIND RANGE(first_child_id + 1, first_child_id + k - 1) AS next_child_id
+	MERGE (last_child:NODE {id:next_child_id -1, value:next_child_id -1})
+	MERGE (next_child:NODE {id:next_child_id, value:next_child_id})
+	MERGE (last_child) - [:NEXT_SIBLING] -> (next_child)
+	`, k, h))
 }
 
 func generateNodeAisADescendantOfNodeBNeoQuery(nodeA, nodeB int) string {
