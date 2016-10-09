@@ -9,14 +9,14 @@ more implementations, a wider range of tests or more data schemas simply follow 
 
 These are the latest versions known to work with the tests
 
-1) Go 1.7.1
-2) MySql 5.7 (community edition)
-3) Neo4j 3.0.4 (community edition)
++ Go 1.7.1
++ MySql 5.7 (community edition)
++ Neo4j 3.0.4 (community edition)
 
 The configuration of the tests is all in the main function in main/main.go, the current configuration assumes you have:
 
-1) Neo4j database running and accessible at `"bolt://neo4j:root@localhost:7687"`
-2) MySql server running with a blank database `dmpt` and accessible at `"root:root@tcp(localhost:3306)/dmpt?multiStatements=true"`
++ Neo4j database running and accessible at `"bolt://neo4j:root@localhost:7687"`
++ MySql server running with a blank database `dmpt` and accessible at `"root:root@tcp(localhost:3306)/dmpt?multiStatements=true"`
 
 Update as necessary.
 
