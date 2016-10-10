@@ -20,8 +20,8 @@ func main() {
 			dmpt.NewNeoNeoismDataModelPerfTest("http://neo4j:root@localhost:7474"),
 			dmpt.NewSqlDataModelPerfTest(db),
 		},
-		[]int{3, 4, 5, 6, 7, 8, 9, 10},
-		[]int{3, 4, 5, 6, 7, 8, 9, 10},
+		[]int{3, 4, 5, 6, 7, 8, 9},
+		[]int{3, 4, 5, 6, 7, 8, 9},
 		log,
 	)
 	log.Warning("TESTING COMPLETE: Press enter to exit")
