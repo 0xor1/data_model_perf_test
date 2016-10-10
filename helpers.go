@@ -35,7 +35,7 @@ func generateIncrementValueOfNodeNeoQuery(node int) string {
 	return fmt.Sprintf("MATCH (n:NODE {id:%d}) SET n.value = n.value + 1", node)
 }
 
-func generateIncrementValueOfAllDescendantsOfNeoQuery(node int) string {
+func generateIncrementValuesBeneathNeoQuery(node int) string {
 	return fmt.Sprintf("MATCH (n:NODE {id:%d})<-[:PARENT *]-(a:NODE) SET a.value = a.value + 1", node)
 }
 

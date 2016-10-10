@@ -65,7 +65,7 @@ func (t *neoBoltDataModelPerfTest) NodeAIsADescendantOfNodeB(nodeA int, nodeB in
 	return false, nil
 }
 
-func (t *neoBoltDataModelPerfTest) IncrementValueOfNodeAndAllOfItsDescendants(node int) error {
+func (t *neoBoltDataModelPerfTest) IncrementValuesBeneath(node int) error {
 	conn, err := t.driverPool.OpenPool()
 	if conn != nil {
 		defer conn.Close()
@@ -73,11 +73,7 @@ func (t *neoBoltDataModelPerfTest) IncrementValueOfNodeAndAllOfItsDescendants(no
 	if err != nil {
 		return err
 	}
-	_, err = conn.ExecNeo(generateIncrementValueOfNodeNeoQuery(node), nil)
-	if err != nil {
-		return err
-	}
-	_, err = conn.ExecNeo(generateIncrementValueOfAllDescendantsOfNeoQuery(node), nil)
+	_, err = conn.ExecNeo(generateIncrementValuesBeneathNeoQuery(node), nil)
 	return err
 }
 

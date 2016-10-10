@@ -40,8 +40,8 @@ func (t *sqlDataModelPerfTest) NodeAIsADescendantOfNodeB(nodeA int, nodeB int) (
 	return false, err
 }
 
-func (t *sqlDataModelPerfTest) IncrementValueOfNodeAndAllOfItsDescendants(node int) error {
-	_, err := t.db.Exec(fmt.Sprintf("UPDATE nodes SET value = value + 1 WHERE id = %d", node))
+func (t *sqlDataModelPerfTest) IncrementValuesBeneath(node int) error {
+	_, err := t.db.Exec(fmt.Sprintf("UPDATE nodes SET value = value + 1 WHERE parent = %d", node))
 	if err != nil {
 		return err
 	}
@@ -57,7 +57,7 @@ func (t *sqlDataModelPerfTest) IncrementValueOfNodeAndAllOfItsDescendants(node i
 		if err := rows.Scan(&nextNode); err != nil {
 			return err
 		}
-		if err := t.IncrementValueOfNodeAndAllOfItsDescendants(nextNode); err != nil {
+		if err := t.IncrementValuesBeneath(nextNode); err != nil {
 			return err
 		}
 	}

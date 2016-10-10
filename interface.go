@@ -5,7 +5,7 @@ type DataModelPerfTest interface {
 	Setup() error
 	CreateData(k, h int) error
 	NodeAIsADescendantOfNodeB(nodeA int, nodeB int) (bool, error)
-	IncrementValueOfNodeAndAllOfItsDescendants(node int) error
+	IncrementValuesBeneath(node int) error
 	SumValuesBeneath(node int) (int, error)
 	GetAncestralChainOf(node int) ([]int, error)
 	TearDown() error
