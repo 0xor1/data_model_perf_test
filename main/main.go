@@ -16,11 +16,12 @@ func main() {
 	}
 	dmpt.RunTests(
 		[]dmpt.DataModelPerfTest{
-			dmpt.NewNeoBoltDataModelPerfTest("bolt://neo4j:root@localhost:7687", 20),
-			dmpt.NewNeoNeoismDataModelPerfTest("http://neo4j:root@localhost:7474"),
 			dmpt.NewSqlDataModelPerfTest(db),
+			dmpt.NewNeoNeoismDataModelPerfTest("http://neo4j:root@localhost:7474"),
+			dmpt.NewNeoBoltDataModelPerfTest("bolt://neo4j:root@localhost:7687", 20),
+
 		},
-		[]int{3, 4, 5, 6, 7, 8, 9},
+		[]int{3, 4},
 		[]int{3, 4, 5, 6, 7, 8, 9},
 		log,
 	)
