@@ -28,7 +28,7 @@ func createPerfectKaryTreeInNeo(k, h int, execNeo func(string) error) error {
 }
 
 func generateNodeAisADescendantOfNodeBNeoQuery(nodeA, nodeB int) string {
-	return fmt.Sprintf("MATCH (b:NODE {id:%d})<-[:PARENT *]-(a:NODE {id:%d}) RETURN b.id", nodeB, nodeA)
+	return fmt.Sprintf("MATCH (b:NODE)<-[:PARENT *1..]-(a:NODE {id:%d}) WITH b WHERE b.id = %d RETURN true AS isDescendant", nodeA, nodeB)
 }
 
 func generateIncrementValueOfNodeNeoQuery(node int) string {
