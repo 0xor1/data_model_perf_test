@@ -31,7 +31,7 @@ func (t *neoNeoismDataModelPerfTest) CreateData(k, h int) error {
 
 func (t *neoNeoismDataModelPerfTest) NodeAIsADescendantOfNodeB(nodeA int, nodeB int) (bool, error) {
 	res := []struct {
-		BId int `json:"b.id"`
+		IsDescendant bool `json:"isDescendant"`
 	}{}
 	err := t.db.Cypher(&neoism.CypherQuery{Statement: generateNodeAisADescendantOfNodeBNeoQuery(nodeA, nodeB), Result: &res})
 	return len(res) == 1, err
