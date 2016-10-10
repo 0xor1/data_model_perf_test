@@ -28,7 +28,6 @@ func (t *neoBoltDataModelPerfTest) Setup() error {
 func (t *neoBoltDataModelPerfTest) CreateData(k, h int) error {
 	conn, err := t.driverPool.OpenPool()
 	if conn != nil {
-		conn.SetTimeout(time.Minute * 20) //for h>=8 the create queries can take a lonnnnng time
 		defer conn.Close()
 	}
 	if err != nil {
