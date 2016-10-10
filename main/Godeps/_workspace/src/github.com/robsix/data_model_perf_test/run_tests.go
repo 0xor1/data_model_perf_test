@@ -50,12 +50,12 @@ func RunTests(tests []DataModelPerfTest, ks []int, hs []int, log golog.Log) {
 				log.Info("%v test.NodeAIsADescendantOfNodeB(lastNode, 1) dur: %v", test.Name(), dur)
 
 				start = time.Now()
-				err = test.IncrementValueOfNodeAndAllOfItsDescendants(0)
+				err = test.IncrementValuesBeneath(0)
 				dur = time.Now().Sub(start)
 				if err != nil {
-					log.Fatal("Failed to run IncrementValueOfNodeAndAllOfItsDescendants query for: %v err: %v", test.Name(), err)
+					log.Fatal("Failed to run IncrementValuesBeneath query for: %v err: %v", test.Name(), err)
 				}
-				log.Info("%v test.IncrementValueOfNodeAndAllOfItsDescendants(0) dur: %v", test.Name(), dur)
+				log.Info("%v test.IncrementValuesBeneath(0) dur: %v", test.Name(), dur)
 
 				start = time.Now()
 				sum, err := test.SumValuesBeneath(0)

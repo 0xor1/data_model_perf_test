@@ -37,8 +37,8 @@ func (t *neoNeoismDataModelPerfTest) NodeAIsADescendantOfNodeB(nodeA int, nodeB 
 	return len(res) == 1, err
 }
 
-func (t *neoNeoismDataModelPerfTest) IncrementValueOfNodeAndAllOfItsDescendants(node int) error {
-	return t.db.Cypher(&neoism.CypherQuery{Statement: generateIncrementValueOfAllDescendantsOfNeoQuery(node)})
+func (t *neoNeoismDataModelPerfTest) IncrementValuesBeneath(node int) error {
+	return t.db.Cypher(&neoism.CypherQuery{Statement: generateIncrementValuesBeneathNeoQuery(node)})
 }
 
 func (t *neoNeoismDataModelPerfTest) SumValuesBeneath(node int) (int, error) {
