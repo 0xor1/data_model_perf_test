@@ -17,6 +17,7 @@ func main() {
 	dmpt.RunTests(
 		[]dmpt.DataModelPerfTest{
 			dmpt.NewSqlDataModelPerfTest(db),
+			dmpt.NewSqlSpDataModelPerfTest(db),
 			dmpt.NewNeoNeoismDataModelPerfTest("http://neo4j:root@localhost:7474"),
 			dmpt.NewNeoBoltDataModelPerfTest("bolt://neo4j:root@localhost:7687", 20),
 

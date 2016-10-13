@@ -106,7 +106,105 @@ func wipeSqlDb(db *sql.DB) error {
 		value MEDIUMINT,
 		PRIMARY KEY (id),
 		UNIQUE INDEX (parent, id)
-	);`)
+	);
+
+	DROP FUNCTION IF EXISTS nodeAIsADescendantOfNodeB;
+	CREATE FUNCTION nodeAIsADescendantOfNodeB(nodeA MEDIUMINT, nodeB MEDIUMINT) RETURNS BOOL NOT DETERMINISTIC
+	BEGIN
+		WHILE nodeA <> nodeB AND nodeA <> -1 DO
+			SET nodeA = (SELECT parent FROM nodes WHERE id = nodeA);
+		END WHILE;
+		RETURN (SELECT nodeA = nodeB);
+	END;
+
+	DROP PROCEDURE IF EXISTS IncrementValuesBeneath;
+	CREATE PROCEDURE IncrementValuesBeneath(node MEDIUMINT)
+	BEGIN
+		DECLARE tempIndexPtr MEDIUMINT DEFAULT 0;
+		DECLARE tempIdsLen MEDIUMINT DEFAULT 0;
+
+		DROP TEMPORARY TABLE IF EXISTS tempIncrementValuesBeneathIds;
+	    	CREATE TEMPORARY TABLE tempIncrementValuesBeneathIds(
+			id MEDIUMINT,
+			PRIMARY KEY(id)
+	    	);
+
+		DROP TEMPORARY TABLE IF EXISTS tempIncrementValuesBeneathIds2;
+	    	CREATE TEMPORARY TABLE tempIncrementValuesBeneathIds2(
+			id MEDIUMINT,
+			PRIMARY KEY(id)
+	    	);
+
+	    	INSERT INTO tempIncrementValuesBeneathIds (id) SELECT id FROM nodes WHERE parent = node;
+	    	SET tempIdsLen = (SELECT COUNT(*) FROM tempIncrementValuesBeneathIds);
+
+	    	WHILE tempIndexPtr < tempIdsLen DO
+			INSERT INTO tempIncrementValuesBeneathIds2 (id) SELECT n.id FROM nodes AS n INNER JOIN (SELECT id FROM tempIncrementValuesBeneathIds LIMIT tempIndexPtr, 18446744073709551615) AS temp ON n.parent = temp.id;
+			INSERT INTO tempIncrementValuesBeneathIds (id) SELECT id FROM tempIncrementValuesBeneathIds2;
+			SET tempIndexPtr = tempIdsLen;
+			SET tempIdsLen = (SELECT COUNT(*) FROM tempIncrementValuesBeneathIds);
+			TRUNCATE TABLE tempIncrementValuesBeneathIds2;
+		END WHILE;
+
+		UPDATE nodes SET value = value + 1 WHERE id IN (SELECT id FROM tempIncrementValuesBeneathIds);
+		DROP TEMPORARY TABLE IF EXISTS tempIncrementValuesBeneathIds;
+		DROP TEMPORARY TABLE IF EXISTS tempIncrementValuesBeneathIds2;
+	END;
+
+	DROP PROCEDURE IF EXISTS SumValuesBeneath;
+	CREATE PROCEDURE SumValuesBeneath(node MEDIUMINT)
+	BEGIN
+		DECLARE tempIndexPtr MEDIUMINT DEFAULT 0;
+		DECLARE tempIdsLen MEDIUMINT DEFAULT 0;
+
+		DROP TEMPORARY TABLE IF EXISTS tempSumValuesBeneathIds;
+		CREATE TEMPORARY TABLE tempSumValuesBeneathIds(
+			id MEDIUMINT,
+			PRIMARY KEY(id)
+		);
+
+		DROP TEMPORARY TABLE IF EXISTS tempSumValuesBeneathIds2;
+		CREATE TEMPORARY TABLE tempSumValuesBeneathIds2(
+			id MEDIUMINT,
+			PRIMARY KEY(id)
+		);
+
+		INSERT INTO tempSumValuesBeneathIds (id) SELECT id FROM nodes WHERE parent = node;
+		SET tempIdsLen = (SELECT COUNT(*) FROM tempSumValuesBeneathIds);
+
+		WHILE tempIndexPtr < tempIdsLen  DO
+			INSERT INTO tempSumValuesBeneathIds2 (id) SELECT n.id FROM nodes AS n INNER JOIN (SELECT id FROM tempSumValuesBeneathIds LIMIT tempIndexPtr, 18446744073709551615) AS temp ON n.parent = temp.id;
+			INSERT INTO tempSumValuesBeneathIds (id) SELECT id FROM tempSumValuesBeneathIds2;
+			SET tempIndexPtr = tempIdsLen;
+			SET tempIdsLen = (SELECT COUNT(*) FROM tempSumValuesBeneathIds);
+			TRUNCATE TABLE tempSumValuesBeneathIds2;
+		END WHILE;
+
+		SELECT SUM(value) FROM nodes WHERE id IN (SELECT * FROM tempSumValuesBeneathIds);
+		DROP TEMPORARY TABLE IF EXISTS tempSumValuesBeneathIds;
+		DROP TEMPORARY TABLE IF EXISTS tempSumValuesBeneathIds2;
+	END;
+
+	DROP PROCEDURE IF EXISTS GetAncestralChainOf;
+	CREATE PROCEDURE GetAncestralChainOf(node MEDIUMINT)
+	BEGIN
+		DROP TEMPORARY TABLE IF EXISTS tempGetAncestralChainOfIds;
+		CREATE TEMPORARY TABLE tempGetAncestralChainOfIds(
+			selectOrder MEDIUMINT NOT NULL AUTO_INCREMENT,
+			id MEDIUMINT,
+			PRIMARY KEY(selectOrder)
+		);
+
+		WHILE node <> -1  DO
+			SET node = (SELECT parent FROM nodes WHERE id = node);
+			IF node <> -1 THEN
+				INSERT INTO tempGetAncestralChainOfIds (id) VALUES (node);
+			END IF;
+		END WHILE;
+
+		SELECT id FROM tempGetAncestralChainOfIds ORDER BY selectOrder DESC;
+		DROP TEMPORARY TABLE IF EXISTS tempGetAncestralChainOfIds;
+	END;`)
 	return err
 }
 
